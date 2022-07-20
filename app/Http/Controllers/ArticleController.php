@@ -17,7 +17,8 @@ class ArticleController extends Controller
 
     public function index()
     {
-        $articles = Article::all()->sortByDesc('created_at');
+        $articles = Article::all()->sortByDesc('created_at')
+            ->load(['user', 'likes', 'tags']);
 
         return view('articles.index', ['articles' => $articles]);
     }
@@ -90,7 +91,6 @@ class ArticleController extends Controller
 
     public function like(Request $request, Article $article)
     {
-        logger($request->user()->id);
 
         $article->likes()->detach($request->user()->id);
         $article->likes()->attach($request->user()->id);
